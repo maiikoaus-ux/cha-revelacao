@@ -7733,9 +7733,6 @@
   function mu({ children: e2 }) {
     return (0, import_jsx_runtime4.jsx)("p", { className: "file-key file-bar", children: e2 });
   }
-  function xu({ src: e2, alt: a, caption: t, fit: o = "cover" }) {
-    return (0, import_jsx_runtime4.jsxs)("figure", { className: "file-figure", "data-fit": o, children: [(0, import_jsx_runtime4.jsx)("img", { src: e2, alt: a, loading: "lazy" }), (0, import_jsx_runtime4.jsx)("figcaption", { children: t })] });
-  }
   function gu({ title: e2, children: a, tone: t = "note" }) {
     return (0, import_jsx_runtime4.jsxs)("aside", { className: "file-callout file-bar", "data-tone": t, children: [(0, import_jsx_runtime4.jsx)("span", { className: "file-strong", children: e2 }), (0, import_jsx_runtime4.jsx)("span", { children: a })] });
   }
@@ -11311,17 +11308,17 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
   // src/App.tsx
   var import_react21 = __toESM(require_react());
 
-  // src/photos/hero.png
-  var hero_default = "./assets-MOKCKRNN.png";
+  // src/photos/hero.webp
+  var hero_default = "./assets-SOR7GMHF.webp";
 
-  // src/photos/disputa.png
-  var disputa_default = "./assets-3CSWT32K.png";
+  // src/photos/disputa.webp
+  var disputa_default = "./assets-3EFNBDAT.webp";
 
-  // src/photos/presentes.png
-  var presentes_default = "./assets-JE6THBSB.png";
+  // src/photos/presentes.webp
+  var presentes_default = "./assets-ENHDUYBN.webp";
 
-  // src/photos/recados.png
-  var recados_default = "./assets-DCWRCX7R.png";
+  // src/photos/recados.webp
+  var recados_default = "./assets-E2DJI46A.webp";
 
   // src/photos/pix-qr.png
   var pix_qr_default = "./assets-72BK5LQN.png";
@@ -11690,7 +11687,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
       ] }) }),
       /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "bloco b-disputa", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(su, { label: "A disputa: de que time voc\xEA \xE9?", heading: true, children: [
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Palpite n\xE3o \xE9 torcida de verdade, mas aqui todo mundo leva MUITO a s\xE9rio. O papai j\xE1 treinou troca de fralda num boneco \u2014 o boneco sobreviveu. \u{1F605} Escolha seu time e registre seu voto!" }),
-        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(xu, { src: disputa_default, alt: "Dois bal\xF5es fofos, um rosa de menina e um azul de menino, frente a frente com uma interroga\xE7\xE3o dourada" }),
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("figure", { className: "file-figure", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("img", { src: disputa_default, alt: "Dois bal\xF5es fofos, um rosa de menina e um azul de menino, frente a frente com uma interroga\xE7\xE3o dourada", loading: "lazy", decoding: "async" }) }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("div", { className: "scorecard", children: [
           /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("div", { className: "score-row", children: [
             /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "score-label girl", children: "\u{1F497} Menina" }),
@@ -11886,7 +11883,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
       ] }) }),
       /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "bloco b-mural", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(su, { label: "Mural de recados", heading: true, children: [
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Deixe aqui um recado, um conselho ou um carinho pro casal e pro beb\xEA. Dica de como sobreviver \xE0s madrugadas em claro vale ouro \u2014 o papai t\xE1 aceitando todas. \u{1F602} Esse mural vai ficar guardado pra sempre." }),
-        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(xu, { src: recados_default, alt: "Passarinho amarelo fofo entregando uma carta rosa numa caixinha de correio azul" }),
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("figure", { className: "file-figure", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("img", { src: recados_default, alt: "Passarinho amarelo fofo entregando uma carta rosa numa caixinha de correio azul", loading: "lazy", decoding: "async" }) }),
         recState === "sent" ? /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(gu, { title: "Recado enviado! \u{1F48C}", tone: "note", children: [
           "Obrigado pelo carinho, ",
           recNome.split(" ")[0],
@@ -11920,7 +11917,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
       ] }) }),
       /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "bloco b-presentes", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(su, { label: "Presentes", heading: true, children: [
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Com carinho, preparamos uma lista de itens \xFAteis pro beb\xEA e pra mam\xE3e. Sinta-se \xE0 vontade pra escolher algo, ou pra abra\xE7ar o casal com seu pr\xF3prio presente." }),
-        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(xu, { src: presentes_default, alt: "Ursinho de pel\xFAcia fofo segurando uma caixinha de presente rosa com la\xE7o azul" }),
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("figure", { className: "file-figure", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("img", { src: presentes_default, alt: "Ursinho de pel\xFAcia fofo segurando uma caixinha de presente rosa com la\xE7o azul", loading: "lazy", decoding: "async" }) }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(su, { label: "Pro beb\xEA", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(PresentesLista, { items: PRESENTES_BEBE }) }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(su, { label: "Pra mam\xE3e", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(PresentesLista, { items: PRESENTES_MAE }) }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Se escolher fraldas, saiba que nunca s\xE3o demais: o beb\xEA troca de roupa mais vezes do que o papai troca de opini\xE3o sobre o enxoval. \u{1F602}" }),
@@ -11957,7 +11954,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("div", { className: "pix-card", children: [
           /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "pix-fun", children: "O papai j\xE1 t\xE1 louco fazendo estoque de fraldas \u2014 jura que \xE9 promo\xE7\xE3o, mas a gente sabe que \xE9 p\xE2nico. \u{1F602} Se preferir, manda um Pix que vira fralda na hora! E se quiser nos aben\xE7oar ofertando qualquer valor, tamb\xE9m vai muito bem. \u{1F49B}" }),
-          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "qr-wrap", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("img", { className: "qr-img", src: pix_qr_default, alt: "QR Code Pix" }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "qr-wrap", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("img", { className: "qr-img", src: pix_qr_default, alt: "QR Code Pix", loading: "lazy", decoding: "async" }) }),
           /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(du, { children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(fu, { name: "Aponte a c\xE2mera pro QR ou copie a chave abaixo", detail: "Chave aleat\xF3ria: 40793de8-3738-4a06-9294-50c144ec1dcf \xB7 Maiko Costa" }) }),
           /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("button", { type: "button", className: "enviar-btn pix-btn", onClick: copiarPix, children: copiado ? "Copiado! \u2705" : "Copiar chave Pix" }),
           pixManual && !copiado && /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("p", { className: "pix-manual", children: [
