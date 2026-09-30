@@ -11363,11 +11363,17 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
     const slug = item.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
     return "https://lista.mercadolivre.com.br/" + slug;
   }
-  function PresentesLista({ items }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("ul", { className: "presentes-lista", children: items.map((it2) => /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("a", { href: mlBusca(it2), target: "_blank", rel: "noopener noreferrer", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { children: it2 }),
-      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "ml-ir", children: "Mercado Livre \u2192" })
-    ] }) }, it2)) });
+  function PresentesLista({ items, reservados }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("ul", { className: "presentes-lista", children: items.map((it2) => {
+      const temDono = reservados.indexOf(it2) >= 0 && !REPETIVEIS.has(it2);
+      return /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("li", { className: temDono ? "reservado" : "", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("a", { href: mlBusca(it2), target: "_blank", rel: "noopener noreferrer", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { children: it2 }),
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("span", { className: "lista-badges", children: [
+          temDono && /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "dono-badge", children: "j\xE1 tem dono \u{1F49B}" }),
+          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "ml-ir", children: "Mercado Livre \u2192" })
+        ] })
+      ] }) }, it2);
+    }) });
   }
   var PRESENTES_MAE = [
     "Suti\xE3 de amamenta\xE7\xE3o e absorventes de seio",
@@ -11377,6 +11383,15 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
     "Calcinhas p\xF3s-parto de c\xF3s alto",
     "Produtos de skincare pra mam\xE3e"
   ];
+  var REPETIVEIS = /* @__PURE__ */ new Set([
+    "Fraldas (P ou M)",
+    "Len\xE7os umedecidos",
+    "Bodies, culotes e cal\xE7as com pezinho (P/M, cores neutras)",
+    "Mantas e paninhos de enrolar",
+    "Fraldas de pano grandes / paninhos de boca",
+    "Calcinhas p\xF3s-parto de c\xF3s alto"
+  ]);
+  var TODOS_PRESENTES = [...PRESENTES_BEBE, ...PRESENTES_MAE];
   function useCountdown() {
     const [now, setNow] = (0, import_react21.useState)(() => Date.now());
     (0, import_react21.useEffect)(() => {
@@ -11463,6 +11478,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
         if (!document.hidden) {
           carregarPlacar();
           carregarRecados();
+          carregarReservas();
         }
       };
       document.addEventListener("visibilitychange", h);
@@ -11478,6 +11494,18 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
     (0, import_react21.useEffect)(carregarRecados, []);
     (0, import_react21.useEffect)(() => {
       const t = setInterval(carregarRecados, 3e4);
+      return () => clearInterval(t);
+    }, []);
+    const [reservados, setReservados] = (0, import_react21.useState)([]);
+    const carregarReservas = () => {
+      jsonp(APPS_SCRIPT_URL + "?lista=reservas&_=" + Date.now()).then((d) => {
+        if (d && Array.isArray(d.reservados)) setReservados(d.reservados);
+      }).catch(() => {
+      });
+    };
+    (0, import_react21.useEffect)(carregarReservas, []);
+    (0, import_react21.useEffect)(() => {
+      const t = setInterval(carregarReservas, 3e4);
       return () => clearInterval(t);
     }, []);
     const [voto, setVoto] = (0, import_react21.useState)(null);
@@ -11571,13 +11599,16 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
     };
     const [presNome, setPresNome] = (0, import_react21.useState)("");
     const [presItem, setPresItem] = (0, import_react21.useState)("");
+    const [presSel, setPresSel] = (0, import_react21.useState)("");
     const [presState, setPresState] = (0, import_react21.useState)("idle");
     const enviarPresente = async () => {
-      if (!presItem.trim()) return;
+      if (!presSel && !presItem.trim()) return;
       setPresState("sending");
       try {
-        await enviar("presente", { nome: presNome.trim(), presente: presItem.trim() });
+        await enviar("presente", { nome: presNome.trim(), presente: presItem.trim(), item: presSel });
         setPresState("sent");
+        setTimeout(carregarReservas, 1500);
+        setTimeout(carregarReservas, 5e3);
       } catch {
         setPresState("error");
       }
@@ -11756,7 +11787,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("a", { className: "agenda-btn", href: CAL_URL, target: "_blank", rel: "noreferrer", children: "Adicionar na agenda \u{1F4C5}" }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(mu, { children: "Leve na bagagem muito amor pra esse beb\xEA. A sua b\xEAn\xE7\xE3o sobre ele \xE9 o nosso maior presente. \u{1F381}" }),
-        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Promessa do papai: ningu\xE9m sai com fome. Promessa da mam\xE3e: tentar n\xE3o chorar no discurso (de novo). \u{1F605}" })
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Promessa do papai: ningu\xE9m sai com fome. Promessa da mam\xE3e: tentar n\xE3o chorar no discurso. \u{1F605}" })
       ] }) }),
       /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "bloco b-presenca", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(su, { label: "Confirme sua presen\xE7a", heading: true, children: [
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Ajuda a gente a calcular a galinhada (e quantas cadeiras o papai vai ter que carregar \u{1F605}). Confirma rapidinho aqui embaixo." }),
@@ -11918,8 +11949,8 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
       /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "bloco b-presentes", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(su, { label: "Presentes", heading: true, children: [
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Com carinho, preparamos uma lista de itens \xFAteis pro beb\xEA e pra mam\xE3e. Sinta-se \xE0 vontade pra escolher algo, ou pra abra\xE7ar o casal com seu pr\xF3prio presente." }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("figure", { className: "file-figure", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("img", { src: presentes_default, alt: "Ursinho de pel\xFAcia fofo segurando uma caixinha de presente rosa com la\xE7o azul", loading: "lazy", decoding: "async" }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(su, { label: "Pro beb\xEA", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(PresentesLista, { items: PRESENTES_BEBE }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(su, { label: "Pra mam\xE3e", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(PresentesLista, { items: PRESENTES_MAE }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(su, { label: "Pro beb\xEA", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(PresentesLista, { items: PRESENTES_BEBE, reservados }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(su, { label: "Pra mam\xE3e", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(PresentesLista, { items: PRESENTES_MAE, reservados }) }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Se escolher fraldas, saiba que nunca s\xE3o demais: o beb\xEA troca de roupa mais vezes do que o papai troca de opini\xE3o sobre o enxoval. \u{1F602}" }),
         presState === "sent" ? /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(gu, { title: "Anotado! \u{1F381}", tone: "note", children: [
           "Obrigado por avisar",
@@ -11927,29 +11958,40 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
           "!"
         ] }) : /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("div", { className: "form-card", children: [
           /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "form-titulo", children: "Vai levar um presente? (opcional)" }),
-          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Se quiser, avisa aqui o que vai levar, s\xF3 pra gente n\xE3o repetir. Sem compromisso nenhum!" }),
+          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: 'Avisar aqui \xE9 opcional e sem compromisso: serve s\xF3 pra ningu\xE9m levar o mesmo item sem querer. Quando algu\xE9m avisa, o item aparece marcado como "j\xE1 tem dono \u{1F49B}" pra todo mundo. Fraldas, len\xE7os, bodies, paninhos e calcinhas podem ir de v\xE1rias pessoas - nesses n\xE3o tem erro! \u{1F604}' }),
           /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Campo, { label: "Seu nome", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("input", { value: presNome, onChange: (e2) => setPresNome(e2.target.value), placeholder: "Opcional", maxLength: 60 }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Campo, { label: "O que voc\xEA vai levar?", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("input", { value: presItem, onChange: (e2) => setPresItem(e2.target.value), placeholder: "Ex.: fraldas M", maxLength: 120 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Campo, { label: "Escolhe um item da lista (toca pra marcar)", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "pres-chips", children: TODOS_PRESENTES.map((it2) => /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "pres-chip" + (presSel === it2 ? " ativo" : "") + (reservados.indexOf(it2) >= 0 && !REPETIVEIS.has(it2) ? " tem-dono" : ""),
+              onClick: () => setPresSel(presSel === it2 ? "" : it2),
+              children: it2
+            },
+            it2
+          )) }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Campo, { label: "Ou escreve outro presente", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("input", { value: presItem, onChange: (e2) => setPresItem(e2.target.value), placeholder: "Ex.: um \xE1lbum de fotos pro beb\xEA", maxLength: 120 }) }),
           viaAba ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
             "a",
             {
               className: "enviar-btn",
-              href: urlEnvio("presente", { nome: presNome.trim(), presente: presItem.trim() }) + "&modo=aba",
+              href: urlEnvio("presente", { nome: presNome.trim(), presente: presItem.trim(), item: presSel }) + "&modo=aba",
               target: "_blank",
               rel: "noopener noreferrer",
               onClick: (e2) => {
-                if (!presItem.trim()) {
+                if (!presSel && !presItem.trim()) {
                   e2.preventDefault();
                   return;
                 }
                 setPresState("sent");
+                setTimeout(carregarReservas, 4e3);
               },
               children: "Avisar o que vou levar \u{1F381}"
             }
           ) : /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("button", { type: "button", className: "enviar-btn", onClick: enviarPresente, children: presState === "sending" ? "Enviando..." : "Avisar o que vou levar \u{1F381}" }),
           presState === "error" && /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(import_jsx_runtime19.Fragment, { children: [
             /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "erro", children: "Ops, n\xE3o foi. Tenta de novo?" }),
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("a", { className: "link-manual", target: "_blank", rel: "noopener noreferrer", href: urlEnvio("presente", { nome: presNome.trim(), presente: presItem.trim() }) + "&modo=aba", children: "Se n\xE3o foi, toca aqui pra enviar \u{1F449}" })
+            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("a", { className: "link-manual", target: "_blank", rel: "noopener noreferrer", href: urlEnvio("presente", { nome: presNome.trim(), presente: presItem.trim(), item: presSel }) + "&modo=aba", children: "Se n\xE3o foi, toca aqui pra enviar \u{1F449}" })
           ] })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("div", { className: "pix-card", children: [

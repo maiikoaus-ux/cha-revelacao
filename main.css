@@ -3852,10 +3852,20 @@ a.enviar-btn {
 }
 .prazo {
   text-align: center;
-  font-weight: 700;
-  color: #c2336d;
-  margin: 6px 0 0;
-  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  font-size: 18px;
+  margin: 14px auto 4px;
+  padding: 12px 18px;
+  max-width: 340px;
+  background:
+    linear-gradient(
+      135deg,
+      #e0447c,
+      #b0286a);
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(224, 68, 124, .35);
+  letter-spacing: .2px;
 }
 .pessoa {
   cursor: default;
@@ -3941,5 +3951,58 @@ a.enviar-btn {
   border-radius: 999px;
   padding: 4px 10px;
   white-space: nowrap;
+}
+.presentes-lista .lista-badges {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.presentes-lista .dono-badge {
+  font-size: 12px;
+  font-weight: 800;
+  color: #8a6d1f;
+  background: #fff3d6;
+  border: 1px solid #ffe1a0;
+  border-radius: 999px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+.presentes-lista li.reservado a {
+  opacity: .62;
+  background: #faf7f2;
+  border-color: #eadfc8;
+}
+.presentes-lista li.reservado a:hover {
+  transform: none;
+  border-color: #eadfc8;
+}
+.pres-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.pres-chip {
+  border: 1.5px solid #d9e6ff;
+  background: #fff;
+  color: #4a3a5e;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.3;
+}
+.pres-chip.ativo {
+  background: #e0447c;
+  border-color: #e0447c;
+  color: #fff;
+}
+.pres-chip.tem-dono:not(.ativo) {
+  opacity: .55;
+  border-style: dashed;
 }
 /*! tailwindcss v3.4.19 | MIT License | https://tailwindcss.com*/
