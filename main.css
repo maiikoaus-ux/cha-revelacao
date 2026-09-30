@@ -3151,7 +3151,7 @@ button.file-dot {
 .balloon {
   position: absolute;
   border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
-  opacity: .45;
+  opacity: .52;
   animation: float 7s ease-in-out infinite;
 }
 .balloon::after {
@@ -3265,7 +3265,7 @@ button.file-dot {
 }
 .unit strong {
   display: block;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 800;
   background:
     linear-gradient(
@@ -3489,21 +3489,21 @@ button.file-dot {
 }
 .cha-page p,
 .cha-page li {
-  font-size: 17px;
-  line-height: 1.7;
+  font-size: 16px;
+  line-height: 1.65;
   text-align: justify;
 }
 .cha-page .campo > span {
   font-size: 14px;
 }
 .score-note {
-  font-size: 15px !important;
+  font-size: 14px !important;
 }
 .unit span {
   font-size: 12px;
 }
 .enviar-btn {
-  font-size: 17px;
+  font-size: 16px;
 }
 .bloco {
   border-radius: 26px;
@@ -3577,7 +3577,7 @@ button.file-dot {
 .cha-page .abertura-deco {
   margin: 0 0 6px;
   text-align: center !important;
-  font-size: 36px;
+  font-size: 30px;
   line-height: 1.25;
   font-weight: 700;
   color: #b0346b;
@@ -3899,5 +3899,47 @@ a.enviar-btn {
   font-size: 14px;
   text-decoration: underline;
   cursor: pointer;
+}
+.presentes-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.presentes-lista li {
+  margin: 0;
+}
+.presentes-lista a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: #fff;
+  text-decoration: none;
+  color: #3d2f4a;
+  font-size: 15px;
+  line-height: 1.4;
+  text-align: left;
+  border: 1.5px solid #d9e6ff;
+  box-shadow: 0 2px 8px rgba(110, 140, 200, .08);
+  transition: transform .15s ease, border-color .15s ease;
+}
+.presentes-lista a:hover {
+  transform: translateY(-1px);
+  border-color: #6fb2ff;
+}
+.presentes-lista .ml-ir {
+  flex: none;
+  font-size: 12px;
+  font-weight: 800;
+  color: #2f6fc4;
+  background: #e8f1ff;
+  border-radius: 999px;
+  padding: 4px 10px;
+  white-space: nowrap;
 }
 /*! tailwindcss v3.4.19 | MIT License | https://tailwindcss.com*/

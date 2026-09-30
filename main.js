@@ -7730,9 +7730,6 @@
   function cu({ children: e2 }) {
     return (0, import_jsx_runtime4.jsx)("p", { className: "file-p", children: e2 });
   }
-  function pu({ items: e2 }) {
-    return (0, import_jsx_runtime4.jsx)("ul", { className: "file-bullets", children: e2.map((a, t) => (0, import_jsx_runtime4.jsx)("li", { children: a }, t)) });
-  }
   function mu({ children: e2 }) {
     return (0, import_jsx_runtime4.jsx)("p", { className: "file-key file-bar", children: e2 });
   }
@@ -11365,6 +11362,16 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
     "Chupeta ortod\xF4ntica Philips Avent ou MAM (0-6 meses)",
     "Brinquedos e chocalhos"
   ];
+  function mlBusca(item) {
+    const slug = item.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    return "https://lista.mercadolivre.com.br/" + slug;
+  }
+  function PresentesLista({ items }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("ul", { className: "presentes-lista", children: items.map((it2) => /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("a", { href: mlBusca(it2), target: "_blank", rel: "noopener noreferrer", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { children: it2 }),
+      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "ml-ir", children: "Mercado Livre \u2192" })
+    ] }) }, it2)) });
+  }
   var PRESENTES_MAE = [
     "Suti\xE3 de amamenta\xE7\xE3o e absorventes de seio",
     "Almofada de amamenta\xE7\xE3o",
@@ -11456,10 +11463,25 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
     }, []);
     (0, import_react21.useEffect)(() => {
       const h = () => {
-        if (!document.hidden) carregarPlacar();
+        if (!document.hidden) {
+          carregarPlacar();
+          carregarRecados();
+        }
       };
       document.addEventListener("visibilitychange", h);
       return () => document.removeEventListener("visibilitychange", h);
+    }, []);
+    const [recados, setRecados] = (0, import_react21.useState)(RECADOS);
+    const carregarRecados = () => {
+      jsonp(APPS_SCRIPT_URL + "?lista=recados&_=" + Date.now()).then((d) => {
+        if (d && Array.isArray(d.recados)) setRecados(d.recados);
+      }).catch(() => {
+      });
+    };
+    (0, import_react21.useEffect)(carregarRecados, []);
+    (0, import_react21.useEffect)(() => {
+      const t = setInterval(carregarRecados, 3e4);
+      return () => clearInterval(t);
     }, []);
     const [voto, setVoto] = (0, import_react21.useState)(null);
     const [nomePalpite, setNomePalpite] = (0, import_react21.useState)("");
@@ -11572,6 +11594,8 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
       try {
         await enviar("recado", { nome: recNome.trim(), recado: recTexto.trim() });
         setRecState("sent");
+        setTimeout(carregarRecados, 1500);
+        setTimeout(carregarRecados, 5e3);
       } catch {
         setRecState("error");
       }
@@ -11892,13 +11916,13 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
             /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("a", { className: "link-manual", target: "_blank", rel: "noopener noreferrer", href: urlEnvio("recado", { nome: recNome.trim(), recado: recTexto.trim() }) + "&modo=aba", children: "Se n\xE3o foi, toca aqui pra enviar \u{1F449}" })
           ] })
         ] }),
-        RECADOS.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(du, { children: RECADOS.map((r, i) => /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(fu, { name: r.texto, detail: r.nome }, i)) }) : /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Ainda n\xE3o tem recados por aqui. Seja o primeiro a escrever! \u2728" })
+        recados.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(du, { children: recados.map((r, i) => /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(fu, { name: r.texto, detail: r.nome }, i)) }) : /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Ainda n\xE3o tem recados por aqui. Seja o primeiro a escrever! \u2728" })
       ] }) }),
       /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "bloco b-presentes", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(su, { label: "Presentes", heading: true, children: [
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Com carinho, preparamos uma lista de itens \xFAteis pro beb\xEA e pra mam\xE3e. Sinta-se \xE0 vontade pra escolher algo, ou pra abra\xE7ar o casal com seu pr\xF3prio presente." }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(xu, { src: presentes_default, alt: "Ursinho de pel\xFAcia fofo segurando uma caixinha de presente rosa com la\xE7o azul" }),
-        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(su, { label: "Pro beb\xEA", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(pu, { items: PRESENTES_BEBE }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(su, { label: "Pra mam\xE3e", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(pu, { items: PRESENTES_MAE }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(su, { label: "Pro beb\xEA", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(PresentesLista, { items: PRESENTES_BEBE }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(su, { label: "Pra mam\xE3e", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(PresentesLista, { items: PRESENTES_MAE }) }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Se escolher fraldas, saiba que nunca s\xE3o demais: o beb\xEA troca de roupa mais vezes do que o papai troca de opini\xE3o sobre o enxoval. \u{1F602}" }),
         presState === "sent" ? /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(gu, { title: "Anotado! \u{1F381}", tone: "note", children: [
           "Obrigado por avisar",
