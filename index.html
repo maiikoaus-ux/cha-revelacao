@@ -1,1 +1,13 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chá Revelação e Chá de Bebê</title><link rel="preload" as="image" href="assets-SOR7GMHF.webp" fetchpriority="high"><link rel="stylesheet" href="main.css"></head><body><div id="root"></div><script>window.instinctFile={initialRoute:location.pathname.replace(/^\/cha-revelacao/,"")||"/",route:function(){}};</script><script src="main.js" defer></script><script>const titleObserver=new MutationObserver(()=>{const title=document.querySelector("h1.file-title");if(title){title.textContent="Chá Revelação e Chá de Bebê";titleObserver.disconnect();}});titleObserver.observe(document.getElementById("root"),{childList:true,subtree:true});</script></body></html>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chá Revelação e Chá de Bebê</title><link rel="preload" as="image" href="assets-SOR7GMHF.webp" fetchpriority="high"><link rel="stylesheet" href="main.css"></head><body><div id="root"></div><script>window.instinctFile={initialRoute:location.pathname.replace(/^\/cha-revelacao/,"")||"/",route:function(){}};</script><script src="main.js" defer></script><script>
+const eventTitle="Chá Revelação e Chá de Bebê";
+const eventAddress="Rua 302, nº 563, Residencial Elohim, Itapema/SC (apertar o nº 100 para salão de festa)";
+function updateEventInfo(){
+ const title=document.querySelector("h1.file-title");
+ if(title&&title.textContent!==eventTitle)title.textContent=eventTitle;
+ const walker=document.createTreeWalker(document.getElementById("root"),NodeFilter.SHOW_TEXT);
+ let node;while(node=walker.nextNode()){if(node.nodeValue.includes("Itapema - endereço a confirmar em breve"))node.nodeValue=node.nodeValue.replace("Itapema - endereço a confirmar em breve",eventAddress);}
+ document.querySelectorAll("a.agenda-btn").forEach(link=>{const url=new URL(link.href);if(url.hostname==="calendar.google.com"){url.searchParams.set("text",eventTitle);url.searchParams.set("location",eventAddress);const details=url.searchParams.get("details")||"";url.searchParams.set("details",details.replace("Itapema (endereço a confirmar em breve)",eventAddress));if(link.href!==url.href)link.href=url.href;}});
+}
+new MutationObserver(updateEventInfo).observe(document.getElementById("root"),{childList:true,subtree:true});
+updateEventInfo();
+</script></body></html>
