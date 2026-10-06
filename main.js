@@ -11460,9 +11460,16 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
         document.head.appendChild(st3);
       }
     }, []);
+    const leiturasPendentes = (0, import_react21.useRef)({});
+    const lerSemSobrepor = (tipo, url) => {
+      const pendentes = leiturasPendentes.current;
+      if (pendentes[tipo]) return pendentes[tipo];
+      pendentes[tipo] = jsonp(url, 40000).finally(() => { delete pendentes[tipo]; });
+      return pendentes[tipo];
+    };
     const [placar, setPlacar] = (0, import_react21.useState)(PLACAR);
     const carregarPlacar = () => {
-      jsonp(APPS_SCRIPT_URL + "?_=" + Date.now()).then((d) => {
+      lerSemSobrepor("placar", APPS_SCRIPT_URL + "?_=" + Date.now()).then((d) => {
         if (typeof d.menina === "number" && typeof d.menino === "number") setPlacar(d);
         if (typeof d.listaVazia === "boolean") setListaVazia(d.listaVazia);
       }).catch(() => {
@@ -11470,7 +11477,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
     };
     (0, import_react21.useEffect)(carregarPlacar, []);
     (0, import_react21.useEffect)(() => {
-      const t = setInterval(carregarPlacar, 3e4);
+      const t = setInterval(() => { if (!document.hidden) carregarPlacar(); }, 12e4);
       return () => clearInterval(t);
     }, []);
     (0, import_react21.useEffect)(() => {
@@ -11486,26 +11493,26 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
     }, []);
     const [recados, setRecados] = (0, import_react21.useState)(RECADOS);
     const carregarRecados = () => {
-      jsonp(APPS_SCRIPT_URL + "?lista=recados&_=" + Date.now()).then((d) => {
+      lerSemSobrepor("recados", APPS_SCRIPT_URL + "?lista=recados&_=" + Date.now()).then((d) => {
         if (d && Array.isArray(d.recados)) setRecados(d.recados);
       }).catch(() => {
       });
     };
     (0, import_react21.useEffect)(carregarRecados, []);
     (0, import_react21.useEffect)(() => {
-      const t = setInterval(carregarRecados, 3e4);
+      const t = setInterval(() => { if (!document.hidden) carregarRecados(); }, 12e4);
       return () => clearInterval(t);
     }, []);
     const [reservados, setReservados] = (0, import_react21.useState)([]);
     const carregarReservas = () => {
-      jsonp(APPS_SCRIPT_URL + "?lista=reservas&_=" + Date.now()).then((d) => {
+      lerSemSobrepor("reservas", APPS_SCRIPT_URL + "?lista=reservas&_=" + Date.now()).then((d) => {
         if (d && Array.isArray(d.reservados)) setReservados(d.reservados);
       }).catch(() => {
       });
     };
     (0, import_react21.useEffect)(carregarReservas, []);
     (0, import_react21.useEffect)(() => {
-      const t = setInterval(carregarReservas, 3e4);
+      const t = setInterval(() => { if (!document.hidden) carregarReservas(); }, 12e4);
       return () => clearInterval(t);
     }, []);
     const [voto, setVoto] = (0, import_react21.useState)(null);
