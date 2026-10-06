@@ -11460,61 +11460,50 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
         document.head.appendChild(st3);
       }
     }, []);
-    const leiturasPendentes = (0, import_react21.useRef)({});
-    const lerSemSobrepor = (tipo, url) => {
-      const pendentes = leiturasPendentes.current;
-      if (pendentes[tipo]) return pendentes[tipo];
-      pendentes[tipo] = jsonp(url, 40000).finally(() => { delete pendentes[tipo]; });
-      return pendentes[tipo];
-    };
-    const [placar, setPlacar] = (0, import_react21.useState)(PLACAR);
-    const carregarPlacar = () => {
-      lerSemSobrepor("placar", APPS_SCRIPT_URL + "?_=" + Date.now()).then((d) => {
-        if (typeof d.menina === "number" && typeof d.menino === "number") setPlacar(d);
-        if (typeof d.listaVazia === "boolean") setListaVazia(d.listaVazia);
-      }).catch(() => {
-      });
-    };
-    (0, import_react21.useEffect)(carregarPlacar, []);
-    (0, import_react21.useEffect)(() => {
-      const t = setInterval(() => { if (!document.hidden) carregarPlacar(); }, 12e4);
-      return () => clearInterval(t);
-    }, []);
-    (0, import_react21.useEffect)(() => {
-      const h = () => {
-        if (!document.hidden) {
-          carregarPlacar();
-          carregarRecados();
-          carregarReservas();
-        }
-      };
-      document.addEventListener("visibilitychange", h);
-      return () => document.removeEventListener("visibilitychange", h);
-    }, []);
-    const [recados, setRecados] = (0, import_react21.useState)(RECADOS);
-    const carregarRecados = () => {
-      lerSemSobrepor("recados", APPS_SCRIPT_URL + "?lista=recados&_=" + Date.now()).then((d) => {
-        if (d && Array.isArray(d.recados)) setRecados(d.recados);
-      }).catch(() => {
-      });
-    };
-    (0, import_react21.useEffect)(carregarRecados, []);
-    (0, import_react21.useEffect)(() => {
-      const t = setInterval(() => { if (!document.hidden) carregarRecados(); }, 12e4);
-      return () => clearInterval(t);
-    }, []);
+    const [placar, setPlacar] = (0, import_react21.useState)(null);
+    const [recados, setRecados] = (0, import_react21.useState)([]);
     const [reservados, setReservados] = (0, import_react21.useState)([]);
-    const carregarReservas = () => {
-      lerSemSobrepor("reservas", APPS_SCRIPT_URL + "?lista=reservas&_=" + Date.now()).then((d) => {
-        if (d && Array.isArray(d.reservados)) setReservados(d.reservados);
+    const [estadoStatus, setEstadoStatus] = (0, import_react21.useState)("loading");
+    const estadoPendente = (0, import_react21.useRef)(null);
+    const estadoValido = (0, import_react21.useRef)(false);
+    const carregarEstado = () => {
+      if (estadoPendente.current) return estadoPendente.current;
+      setEstadoStatus(estadoValido.current ? "refreshing" : "loading");
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 40000);
+      const pedido = fetch(APPS_SCRIPT_URL + "?lista=estado&_=" + Date.now(), { signal: controller.signal, credentials: "omit" }).then((r) => {
+        if (!r.ok) throw new Error("leitura falhou");
+        return r.json();
+      }).then((d) => {
+        if (!d || typeof d.menina !== "number" || typeof d.menino !== "number" || !Array.isArray(d.recados) || !Array.isArray(d.reservados)) throw new Error("estado invalido");
+        setPlacar({ menina: d.menina, menino: d.menino });
+        setRecados(d.recados);
+        setReservados(d.reservados);
+        estadoValido.current = true;
+        setEstadoStatus("ready");
       }).catch(() => {
+        setEstadoStatus("error");
+      }).finally(() => {
+        clearTimeout(timer);
+        estadoPendente.current = null;
       });
+      estadoPendente.current = pedido;
+      return pedido;
     };
-    (0, import_react21.useEffect)(carregarReservas, []);
+    const carregarPlacar = carregarEstado;
+    const carregarRecados = carregarEstado;
+    const carregarReservas = carregarEstado;
+    (0, import_react21.useEffect)(() => { carregarEstado(); }, []);
     (0, import_react21.useEffect)(() => {
-      const t = setInterval(() => { if (!document.hidden) carregarReservas(); }, 12e4);
-      return () => clearInterval(t);
+      const t = setInterval(() => { if (!document.hidden) carregarEstado(); }, 12e4);
+      const h = () => { if (!document.hidden) carregarEstado(); };
+      document.addEventListener("visibilitychange", h);
+      return () => { clearInterval(t); document.removeEventListener("visibilitychange", h); };
     }, []);
+    const avisoEstado = estadoStatus !== "ready" && /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("div", { className: "form-card", role: "status", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { children: estadoStatus === "error" ? (estadoValido.current ? "Não consegui atualizar. Mostrando a última leitura recebida." : "Não consegui carregar os dados. Tente de novo.") : (estadoValido.current ? "Atualizando os dados..." : "Carregando placar, recados e reservas...") }),
+      estadoStatus === "error" && /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("button", { type: "button", className: "enviar-btn", onClick: carregarEstado, children: "Tentar de novo" })
+    ] });
     const [voto, setVoto] = (0, import_react21.useState)(null);
     const [nomePalpite, setNomePalpite] = (0, import_react21.useState)("");
     const [palpiteState, setPalpiteState] = (0, import_react21.useState)("idle");
@@ -11669,8 +11658,8 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
         setPixManual(true);
       }
     };
-    const totalVotos = placar.menina + placar.menino;
-    const pctMenina = totalVotos === 0 ? 50 : Math.round(placar.menina / totalVotos * 100);
+    const totalVotos = placar ? placar.menina + placar.menino : 0;
+    const pctMenina = totalVotos === 0 ? 50 : Math.round((placar ? placar.menina : 0) / totalVotos * 100);
     return /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(ru, { className: "cha-page", children: [
       /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("div", { className: "balloons", "aria-hidden": "true", children: [
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "balloon b1" }),
@@ -11698,6 +11687,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
           intro: "Menina ou menino? Voc\xEA \xE9 nosso convidado especial pra descobrir juntinho com a gente."
         }
       ),
+      avisoEstado,
       /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("div", { className: "bloco b-abertura", children: [
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "deco abertura-deco", children: "Nosso milagre est\xE1 chegando! \u{1F49B}" }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Ficar\xEDamos muito felizes com a sua presen\xE7a nesse dia t\xE3o esperado. Prepare o cora\xE7\xE3o (e o palpite): vem a\xED uma tarde de galinhada, risadas e a grande revela\xE7\xE3o." })
@@ -11726,13 +11716,14 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
       /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "bloco b-disputa", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(su, { label: "A disputa: de que time voc\xEA \xE9?", heading: true, children: [
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Palpite n\xE3o \xE9 torcida de verdade, mas aqui todo mundo leva MUITO a s\xE9rio. O papai j\xE1 treinou troca de fralda num boneco \u2014 o boneco sobreviveu. \u{1F605} Escolha seu time e registre seu voto!" }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("figure", { className: "file-figure", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("img", { src: disputa_default, alt: "Dois bal\xF5es fofos, um rosa de menina e um azul de menino, frente a frente com uma interroga\xE7\xE3o dourada", loading: "lazy", decoding: "async" }) }),
+        avisoEstado,
         /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("div", { className: "scorecard", children: [
           /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("div", { className: "score-row", children: [
             /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "score-label girl", children: "\u{1F497} Menina" }),
             /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("span", { className: "score-numbers", children: [
-              placar.menina,
+              placar ? placar.menina : "-",
               " \xD7 ",
-              placar.menino
+              placar ? placar.menino : "-"
             ] }),
             /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("span", { className: "score-label boy", children: "Menino \u{1F499}" })
           ] }),
@@ -11740,7 +11731,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
             /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "score-fill girl", style: { width: `${pctMenina}%` } }),
             /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "score-fill boy", style: { width: `${100 - pctMenina}%` } })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "score-note", children: totalVotos === 0 ? "Nenhum voto ainda. Seja o primeiro a abrir a disputa!" : `${totalVotos} voto${totalVotos === 1 ? "" : "s"} computado${totalVotos === 1 ? "" : "s"}. Placar atualizado conforme os votos chegam.` })
+          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "score-note", children: !placar ? "Placar ainda não carregado." : totalVotos === 0 ? "Nenhum voto ainda. Seja o primeiro a abrir a disputa!" : `${totalVotos} voto${totalVotos === 1 ? "" : "s"} computado${totalVotos === 1 ? "" : "s"}. Placar atualizado conforme os votos chegam.` })
         ] }),
         palpiteState === "sent" ? /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(gu, { title: "Voto computado! \u{1F389}", tone: "note", children: [
           "Obrigado por entrar na disputa, ",
@@ -11948,7 +11939,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
             /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("a", { className: "link-manual", target: "_blank", rel: "noopener noreferrer", href: urlEnvio("recado", { nome: recNome.trim(), recado: recTexto.trim() }) + "&modo=aba", children: "Se n\xE3o foi, toca aqui pra enviar \u{1F449}" })
           ] })
         ] }),
-        recados.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(du, { children: recados.map((r, i) => /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(fu, { name: r.texto, detail: r.nome }, i)) }) : /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Ainda n\xE3o tem recados por aqui. Seja o primeiro a escrever! \u2728" })
+        !estadoValido.current ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Recados ainda não carregados." }) : recados.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(du, { children: recados.map((r, i) => /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(fu, { name: r.texto, detail: r.nome }, i)) }) : /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Ainda n\xE3o tem recados por aqui. Seja o primeiro a escrever! \u2728" })
       ] }) }),
       /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "bloco b-presentes", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(su, { label: "Presentes", heading: true, children: [
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Com carinho, preparamos uma lista de itens \xFAteis pro beb\xEA e pra mam\xE3e. Sinta-se \xE0 vontade pra escolher algo, ou pra abra\xE7ar o casal com seu pr\xF3prio presente." }),
@@ -11956,6 +11947,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(su, { label: "Pro beb\xEA", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(PresentesLista, { items: PRESENTES_BEBE, reservados }) }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(su, { label: "Pra mam\xE3e", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(PresentesLista, { items: PRESENTES_MAE, reservados }) }),
 
+        avisoEstado,
         presState === "sent" ? /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(gu, { title: "Anotado! \u{1F381}", tone: "note", children: [
           "Obrigado por avisar",
           presNome.trim() ? `, ${presNome.split(" ")[0]}` : "",
@@ -11968,6 +11960,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
             {
               type: "button",
               className: "pres-chip" + (presSel === it2 ? " ativo" : "") + (reservados.indexOf(it2) >= 0 && !REPETIVEIS.has(it2) ? " tem-dono" : ""),
+              disabled: !estadoValido.current || estadoStatus === "error",
               onClick: () => setPresSel(presSel === it2 ? "" : it2),
               children: it2
             },
@@ -11990,7 +11983,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
               },
               children: "Avisar o que vou levar \u{1F381}"
             }
-          ) : /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("button", { type: "button", className: "enviar-btn", onClick: enviarPresente, children: presState === "sending" ? "Enviando..." : "Avisar o que vou levar \u{1F381}" }),
+          ) : /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("button", { type: "button", className: "enviar-btn", onClick: enviarPresente, disabled: !estadoValido.current || estadoStatus === "error", children: presState === "sending" ? "Enviando..." : "Avisar o que vou levar \u{1F381}" }),
           presState === "error" && /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(import_jsx_runtime19.Fragment, { children: [
             /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "erro", children: "Ops, n\xE3o foi. Tenta de novo?" }),
             /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("a", { className: "link-manual", target: "_blank", rel: "noopener noreferrer", href: urlEnvio("presente", { nome: presNome.trim(), presente: presItem.trim(), item: presSel }) + "&modo=aba", children: "Se n\xE3o foi, toca aqui pra enviar \u{1F449}" })
