@@ -11955,15 +11955,14 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("figure", { className: "file-figure", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("img", { src: presentes_default, alt: "Ursinho de pel\xFAcia fofo segurando uma caixinha de presente rosa com la\xE7o azul", loading: "lazy", decoding: "async" }) }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(su, { label: "Pro beb\xEA", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(PresentesLista, { items: PRESENTES_BEBE, reservados }) }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(su, { label: "Pra mam\xE3e", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(PresentesLista, { items: PRESENTES_MAE, reservados }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Se escolher fraldas, saiba que nunca s\xE3o demais: o beb\xEA troca de roupa mais vezes do que o papai troca de opini\xE3o sobre o enxoval. \u{1F602}" }),
+
         presState === "sent" ? /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(gu, { title: "Anotado! \u{1F381}", tone: "note", children: [
           "Obrigado por avisar",
           presNome.trim() ? `, ${presNome.split(" ")[0]}` : "",
           "!"
         ] }) : /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("div", { className: "form-card", children: [
           /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "form-titulo", children: "Vai levar um presente? (opcional)" }),
-          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: 'Avisar aqui \xE9 opcional e sem compromisso: serve s\xF3 pra ningu\xE9m levar o mesmo item sem querer. Quando algu\xE9m avisa, o item aparece marcado como "j\xE1 tem dono \u{1F49B}" pra todo mundo. Fraldas, len\xE7os, bodies, paninhos e calcinhas podem ir de v\xE1rias pessoas - nesses n\xE3o tem erro! \u{1F604}' }),
-          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Campo, { label: "Seu nome", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("input", { value: presNome, onChange: (e2) => setPresNome(e2.target.value), placeholder: "Opcional", maxLength: 60 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: 'Escolha um item e avise. Ele fica marcado como "já tem dono 💛". Fraldas, lenços, bodies, paninhos e calcinhas podem ser repetidos.' }),
           /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Campo, { label: "Escolhe um item da lista (toca pra marcar)", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "pres-chips", children: TODOS_PRESENTES.map((it2) => /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
             "button",
             {
@@ -11974,7 +11973,6 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
             },
             it2
           )) }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Campo, { label: "Ou escreve outro presente", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("input", { value: presItem, onChange: (e2) => setPresItem(e2.target.value), placeholder: "Ex.: um \xE1lbum de fotos pro beb\xEA", maxLength: 120 }) }),
           viaAba ? /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
             "a",
             {
@@ -11999,7 +11997,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
           ] })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("div", { className: "pix-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "pix-fun", children: "O papai j\xE1 t\xE1 louco fazendo estoque de fraldas \u2014 jura que \xE9 promo\xE7\xE3o, mas a gente sabe que \xE9 p\xE2nico. \u{1F602} Se preferir, manda um Pix que vira fralda na hora! E se quiser nos aben\xE7oar ofertando qualquer valor, tamb\xE9m vai muito bem. \u{1F49B}" }),
+          /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "pix-fun", children: "O papai já tá fazendo estoque de fraldas e jura que é promoção, mas a gente sabe que é pânico 😂 Presente aqui é só carinho: se quiser mimar o bebê, a chave Pix está ali embaixo 💛" }),
           /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "qr-wrap", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("img", { className: "qr-img", src: pix_qr_default, alt: "QR Code Pix", loading: "lazy", decoding: "async" }) }),
           /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(du, { children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(fu, { name: "Aponte a c\xE2mera pro QR ou copie a chave abaixo", detail: "Chave aleat\xF3ria: 40793de8-3738-4a06-9294-50c144ec1dcf \xB7 Maiko Costa" }) }),
           /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("button", { type: "button", className: "enviar-btn pix-btn", onClick: copiarPix, children: copiado ? "Copiado! \u2705" : "Copiar chave Pix" }),
@@ -12009,7 +12007,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
           ] })
         ] })
       ] }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "bloco b-fotos", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(su, { label: "Fotos e v\xEDdeo do casal", heading: true, children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Estamos preparando com carinho um cantinho com nossas fotos e um v\xEDdeo da nossa hist\xF3ria. Em breve por aqui!" }) }) }),
+
       /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(Su, { children: "A gente se v\xEA l\xE1! \u{1FA77}\u{1F499} Com amor, Maiko & Mardely (e o beb\xEA na barriga)" })
     ] });
   }
