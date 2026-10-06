@@ -11541,7 +11541,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
       setBuscaErro(false);
       setNaoAchou(false);
       try {
-        const d = await jsonp(APPS_SCRIPT_URL + "?busca=" + encodeURIComponent(q) + "&_=" + Date.now());
+        const d = await jsonp(APPS_SCRIPT_URL + "?busca=" + encodeURIComponent(q) + "&_=" + Date.now(), 40000);
         if (d.listaVazia) {
           setListaVazia(true);
           return;
@@ -11858,10 +11858,7 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
             }
           ) }),
           !pessoas && /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("button", { type: "button", className: "enviar-btn", onClick: buscarNaLista, disabled: buscando || rsvpBusca.trim().length < 2, children: buscando ? "Procurando..." : "Buscar na lista \u{1F50E}" }),
-          buscaErro && /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(import_jsx_runtime19.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "erro", children: "Ops, n\xE3o foi. Tenta de novo?" }),
-            /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("a", { className: "link-manual", target: "_blank", rel: "noopener noreferrer", href: APPS_SCRIPT_URL + "?fluxo=busca&nome=" + encodeURIComponent(rsvpBusca.trim()), children: "Se n\xE3o foi, toca aqui pra confirmar \u{1F449}" })
-          ] }),
+          buscaErro && /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "erro", children: "A busca demorou mais que o esperado. Toca em Buscar na lista para tentar de novo aqui, sem sair da página." }),
           naoAchou && /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "aviso", children: "N\xE3o achei teu nome na lista \u2014 confere a grafia ou fala com o casal \u{1F49B}" }),
           pessoas && /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(import_jsx_runtime19.Fragment, { children: [
             /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "form-titulo", children: "Marca quem vai (e quem n\xE3o vai):" }),
