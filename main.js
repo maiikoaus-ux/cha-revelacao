@@ -11439,6 +11439,25 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
       document.head.appendChild(s);
     });
   }
+  var ESTADO_CACHE_KEY = "chaEstadoV1";
+  function lerEstadoCache() {
+    try {
+      const d = JSON.parse(localStorage.getItem(ESTADO_CACHE_KEY) || "null");
+      if (!d || typeof d.menina !== "number" || typeof d.menino !== "number" || !Array.isArray(d.recados) || !Array.isArray(d.reservados)) return null;
+      return d;
+    } catch {
+      return null;
+    }
+  }
+  function salvarEstadoCache(d) {
+    try {
+      localStorage.setItem(ESTADO_CACHE_KEY, JSON.stringify({ menina: d.menina, menino: d.menino, recados: d.recados, reservados: d.reservados, at: Date.now() }));
+    } catch {
+    }
+  }
+  function esperar(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
   async function enviar(tipo, data2) {
     const d = await jsonp(urlEnvio(tipo, data2) + "&_=" + Date.now());
     if (d && d.ok === true) return;
@@ -11460,31 +11479,36 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
         document.head.appendChild(st3);
       }
     }, []);
-    const [placar, setPlacar] = (0, import_react21.useState)(null);
-    const [recados, setRecados] = (0, import_react21.useState)([]);
-    const [reservados, setReservados] = (0, import_react21.useState)([]);
-    const [estadoStatus, setEstadoStatus] = (0, import_react21.useState)("loading");
+    const [estadoInicial] = (0, import_react21.useState)(lerEstadoCache);
+    const [placar, setPlacar] = (0, import_react21.useState)(estadoInicial ? { menina: estadoInicial.menina, menino: estadoInicial.menino } : null);
+    const [recados, setRecados] = (0, import_react21.useState)(estadoInicial ? estadoInicial.recados : []);
+    const [reservados, setReservados] = (0, import_react21.useState)(estadoInicial ? estadoInicial.reservados : []);
+    const [estadoStatus, setEstadoStatus] = (0, import_react21.useState)(estadoInicial ? "ready" : "loading");
     const estadoPendente = (0, import_react21.useRef)(null);
-    const estadoValido = (0, import_react21.useRef)(false);
+    const estadoValido = (0, import_react21.useRef)(!!estadoInicial);
     const carregarEstado = () => {
       if (estadoPendente.current) return estadoPendente.current;
       setEstadoStatus(estadoValido.current ? "refreshing" : "loading");
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 40000);
-      const pedido = fetch(APPS_SCRIPT_URL + "?lista=estado&_=" + Date.now(), { signal: controller.signal, credentials: "omit" }).then((r) => {
-        if (!r.ok) throw new Error("leitura falhou");
-        return r.json();
-      }).then((d) => {
+      const tentar = () => {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 40000);
+        return fetch(APPS_SCRIPT_URL + "?lista=estado&_=" + Date.now(), { signal: controller.signal, credentials: "omit" }).then((r) => {
+          if (!r.ok) throw new Error("leitura falhou");
+          return r.json();
+        }).finally(() => clearTimeout(timer));
+      };
+      const pedido = tentar().catch(() => esperar(3e3).then(tentar)).catch(() => esperar(8e3).then(tentar)).then((d) => {
         if (!d || typeof d.menina !== "number" || typeof d.menino !== "number" || !Array.isArray(d.recados) || !Array.isArray(d.reservados)) throw new Error("estado invalido");
         setPlacar({ menina: d.menina, menino: d.menino });
         setRecados(d.recados);
         setReservados(d.reservados);
         estadoValido.current = true;
+        salvarEstadoCache(d);
         setEstadoStatus("ready");
       }).catch(() => {
         setEstadoStatus("error");
       }).finally(() => {
-        clearTimeout(timer);
+
         estadoPendente.current = null;
       });
       estadoPendente.current = pedido;
@@ -11537,7 +11561,8 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
       setBuscaErro(false);
       setNaoAchou(false);
       try {
-        const d = await jsonp(APPS_SCRIPT_URL + "?busca=" + encodeURIComponent(q) + "&_=" + Date.now(), 40000);
+        const pedir = () => jsonp(APPS_SCRIPT_URL + "?busca=" + encodeURIComponent(q) + "&_=" + Date.now(), 40000);
+        const d = await pedir().catch(() => esperar(2500).then(pedir));
         if (d.listaVazia) {
           setListaVazia(true);
           return;
@@ -11789,13 +11814,13 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
       ] }) }),
       /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { className: "bloco b-presenca", children: /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)(su, { label: "Confirme sua presen\xE7a", heading: true, children: [
         /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(cu, { children: "Ajuda a gente a calcular a galinhada (e quantas cadeiras o papai vai ter que carregar \u{1F605}). Confirma rapidinho aqui embaixo." }),
-        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "prazo", children: "Confirme at\xE9 quarta, 07/10 \u{1F49B}" }),
+        /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "prazo", children: "Confirme at\xE9 quinta, 08/10 \u{1F49B}" }),
         rsvpState === "sent" && rsvpTipo === "nao" ? /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("div", { className: "confirm-card", children: [
           /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "confirm-title", children: "Tudo bem \u{1F49B}" }),
           /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("p", { className: "confirm-fun", children: [
             "Pena que voc\xEA n\xE3o vai poder vir, ",
             (rsvpNome.trim() || rsvpBusca.trim()).split(" ")[0],
-            " \u2014 vamos sentir sua falta! Se mudar de ideia at\xE9 quarta, 07/10, \xE9 s\xF3 voltar aqui e confirmar."
+            " \u2014 vamos sentir sua falta! Se mudar de ideia at\xE9 quinta, 08/10, \xE9 s\xF3 voltar aqui e confirmar."
           ] })
         ] }) : rsvpState === "sent" ? /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("div", { className: "confirm-card", children: [
           /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("p", { className: "confirm-title", children: "Presen\xE7a confirmada! \u{1F388}" }),
